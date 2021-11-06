@@ -2,60 +2,52 @@
 #include <ctime>
 using namespace std;
 
-int* delete0(int* arr, int* size) // ф-я удаления нулей
-{
-    int* rem = remove(arr, arr + *size, 0);
-    if (rem == size)
-        return arr;
-    *size = rem - arr;
-    int* new_arr = new int[*size]; //создание нового массива
-    memcpy(new_arr, arr, sizeof(int) * (*size));
-    delete[] arr;
-    return new_arr;
-}
+int arr[100]; // создание массивов и заполнение их нулями
+int arr2[100];
+int arr3[100];
+int i, j = 0,k=0;
+int size1, size2, size3; // создание размеров для соответствуюцих массивов 
 
-int* insertn(int* arr, int* size, int* N, const int value) // ф-я замены элемента
-{
-    if (N >= arr && N < (arr + *size))
-    {
-        int* new_arr = new int[*size + 1];
-        int new_size = N - arr + 1;
-        memcpy(new_arr, arr, sizeof(int) * new_size);
-        *(new_arr + new_size) = value;
-        memcpy(new_arr + new_size + 1, arr + new_size, sizeof(int) * (*size - new_size));
-        delete[] arr;
-        ++* size;
-        return new_arr;
-    }
-    return arr;
-}
 
 int main()
-{
+{ 
     srand(time(NULL));
     setlocale(LC_ALL, "Russian");
-    int size = 30;
-    int* arr = new int[size];
+    cout << "Введите кол-во переменных в массиве (заполняется случайно):  ";
+    cin >> size1;
+    size2 = size1;
 
-    cout << "Заполнение массива:" << endl;
-    for (int i = 0; i < size; i++) {
-        arr[i] = rand() % 21 - 10;
+    cout << endl << "Заполнение массива:" << endl;
+    for (int i = 0; i < size1; i++) { // заполнение массива случайными числами
+        arr[i] = rand() % 21 - 10; // разброс элементов выбран так, чтобы чаще встречался ноль
         cout << arr[i] << "  ";
     }
+    //раздел удаления нулей
     cout << endl << "Удаление нулей:" << endl;
-    arr = delete0(arr, &size);
-    for (int i = 0; i < size; i++)
-        cout << arr[i] << "  ";
-    //Добавление после первого четного элемента массива элемента со значением M[ I-1 ]+2
+    for (i = 0; i < size1; i++) // проверка элементов массива
+        if (arr[i]!=0)  //если значение не равно нулю
+            arr2[j++] = arr[i];  //значение элемента из "arr" копируется в массив "arr2" 
+        else size2--;  // если значение элемента равно нулю, то оно не перенисится и размер массива уменьшается на 1
+    for (i = 0; i < size2; i++)
+        cout << arr2[i] << "  ";
+    int size3 = size2; // размеры масссива 3 приравнивается к значению размера массива 2 
+    //раздел добавления после первого четного элемента массива элемента со значением M[ I-1 ]+2
     cout << endl << "Добавление элемента:" << endl;
-    int* n = find_if(arr, arr + size, [](int val) { return !(val % 2); }); //проверка на четность
-    if (n != arr + size)
-        arr = insertn(arr, &size, n, *(n)+2);
-
-    for (int i = 0; i < size; i++)
-        cout << arr[i] << "  ";
-
+    bool f = true; //задание признака остановки проверки на четность после первого четного элемента
+    for (i = 0; i < size2; i++) { // проверка элементов массива
+        arr3[k++] = arr2[i]; //значение элемента из "arr2" копируется в массив "arr3" 
+        if ((arr2[i] % 2 == 0) && (f==true))//проверка на четность элемента и завершенность операции
+        {
+            arr3[k] = arr2[i] + 2;//вставка элемента
+            k++;
+            f = false;//признак остановки
+            size3++;//увеличение размера массива 3
+        }
+    }
+    for (i = 0; i < size3; i++)
+        cout << arr3[i] << "  ";
 
     return 0;
 }
+
 
